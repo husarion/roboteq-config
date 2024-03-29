@@ -60,7 +60,7 @@ Operating Mode Setup via SDO:
 2. Connect the controller to a Windows computer using a miniUSB connector.
 3. Launch RoboRun+ software.
 4. Click `Yes` to read the controller configuration.
-![img](./.docs/read-controler-req.png)
+![img](./.docs/read-controller-req.png)
 
 **Firmware Update Process**
 
@@ -91,7 +91,7 @@ Operating Mode Setup via SDO:
 5. In the `Actions` tab, click `Load Profile from Disk`.
 6. Choose a configuration file that matches the driver connected to the PC (either front or rear). For example, [this one for the front driver](./configuration/front-v2.1-SBL2360T-20230328.cpr).
 7. A warning popup might appear. Click `Yes`.
-![img](./.docs/read-controler-warn.png)
+![img](./.docs/read-controller-warn.png)
 8. In the Actions tab, click `Save to Controller`.
 
 ### Roboteq Script Update
