@@ -64,6 +64,9 @@ Operating Mode Setup via SDO:
 
 **Firmware Update Process**
 
+> [!NOTE]
+> You can download the firmware from the links provided in the table at the beginning of the [README.md](README.md).
+
 4. Navigate to the `Console` tab and click on `Update Firmware via USB`.
 5. The controller will enter DFU mode and will be recognized as a new USB device (STM DFU). If it's the first time, driver installation might be required.
 
@@ -75,7 +78,7 @@ Operating Mode Setup via SDO:
 
 **Continuing Firmware Update**
 
-1. In the DFULoader program, select the appropriate device driver from the list. It may take some time for the computer to recognize the driver. You can download the firmware from the links provided in the table at the beginning of the [README.md](README.md). Then, select the correct firmware **(ENSURE IT MATCHES THE MODEL OF YOUR DEVICE!)**.  Click "Upgrade".
+1. In the DFULoader program, select the appropriate device driver from the list. It may take some time for the computer to recognize the driver. Then, select the correct firmware **(ENSURE IT MATCHES THE MODEL OF YOUR DEVICE!)**.  Click "Upgrade".
 2.  After the firmware upload is complete (a "success" message appears), you can restart the controller.
 3.  In RoboRun, verify the firmware version (bottom right corner) to ensure the update was successful.
 
