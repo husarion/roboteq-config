@@ -91,7 +91,7 @@ Operating Mode Setup via SDO:
 2. Connect a USB Mini B cable to the BLDC Motor Driver (one at a time).
 3. Launch RoboRun+ software.
 4. Click `Yes` to read the controller configuration.
-5. In the `Actions` tab, click `Load Profile from Disk`.
+5. In the `Configuration` tab, click `Load Profile from Disk`.
 6. Choose a configuration file that matches the driver connected to the PC (either front or rear). For example, [this one for the front driver](./configuration/v2.1-SBL2360T-03012024-sin-rpdo-front.cpr).
 7. A warning popup might appear. Click `Yes`.
 ![img](./.docs/read-controller-warn.png)
