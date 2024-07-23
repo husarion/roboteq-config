@@ -48,6 +48,9 @@ Operating Mode Setup via SDO:
 
 ## Roboteq Driver Setup
 
+### Install RoboRun+
+RoboRun+ is a Windows application for configurate Panther's motors. The program is avaible on [the website of the producent](https://www.roboteq.com/docman-list/motor-controllers-documents-and-files/nxtgen-downloads-1/pc-utility/1035-roborun-pc-utility-3-0beta/file). Remember to install the program in version **Roborun+ PC Utility v3.0**.
+
 ### Firmware Update
 
 > [!CAUTION]
