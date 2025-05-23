@@ -1,0 +1,187 @@
+#define MAX_LOOP_ERR 400
+#define DSC_ENC_THRESHOLD 20
+#define TRIGGER_CURRENT 120
+#define OVER_TIME 2000
+#define LIMIT_TIME 5000
+#define LIMIT_CURRENT 80
+
+dim loopErrTimer as boolean
+dim loopErrFlag as boolean
+dim encDscTimer as boolean
+dim encDscFlag as boolean
+dim currentTimer as boolean
+dim currentFlag as boolean
+dim initialCheckFlag as boolean
+dim initCheckTimer as boolean
+
+dim enc1PrevValue as integer
+dim enc2PrevValue as integer
+
+dim lastTimerValue as integer
+dim lastCurrTimVal as integer
+dim currentCounter as integer
+dim totalCurrent as integer
+
+loopErrTimer = false
+loopErrFlag = false
+encDscFlag = false
+encDscTimer = false
+
+setconfig(_DOA, 4, 0) 'set DOUT4 always OFF
+setconfig(_DOL, 4, 1) 'set pin Active Level
+initialCheckFlag = true
+initCheckTimer = false
+flags = 0
+mainLoop:
+	while true
+	
+	enc1 = getvalue(_C, 1)
+	enc2 = getvalue(_C, 2)
+	setcommand(_VAR, 1, enc1) 'Setting encoder values as user variables
+	setcommand(_VAR, 2, enc2)
+	
+	speed1 = getvalue(_S, 1)
+	speed2 = getvalue(_S, 2)
+	setcommand(_VAR, 3, speed1) 'Setting speed values as user variables
+	setcommand(_VAR, 4, speed2)
+	
+	curr1 = getvalue(_A, 1)
+	curr2 = getvalue(_A, 2)
+	setcommand(_VAR, 5, curr1) 'Setting current values as user variables
+	setcommand(_VAR, 6, curr2)
+	
+	flags = (((loopErrFlag and 0x01) or ((encDscFlag and 0x02)) or (currentFlag and 0x04)))
+
+	setcommand(_VAR, 7, (getvalue(_FF, 1) or (flags << 16))) 'Setting fault codes as user variables
+	setcommand(_VAR, 8, (getValue(_FM, 1) + (getValue(_FM, 2) << 8))) 
+	
+	if getValue(_FF, 1 ) > 0 or flags > 0 then
+		setconfig(_DOL, 4, 0) 'set output level of DOUT4
+	else
+		setConfig(_DOL, 4, 1)
+	end if
+	
+	loop1 = getvalue(_E, 1)
+	loop2 = getvalue(_E, 2)
+	
+	command1 = getvalue(_M, 1)
+	command2 = getvalue(_M, 2)
+	
+	totalCurrent = abs(curr1) + abs(curr2) 
+	
+	if(abs(command1) > DSC_ENC_THRESHOLD or abs(command2) > DSC_ENC_THRESHOLD) and initialCheckFlag and not initCheckTimer then
+		SetTimerCount(4, 1000)
+		initCheckTimer = true
+	end if
+	if(initCheckTimer and initialCheckFlag and GetTimerCount(4) < 1) then
+		initialCheckFlag = false
+	end if
+	'AMP LIMITER SECTION - DISABLED DUE TO NOT ENOUGH TESTS
+	'if(GetTimerState(3) > 0 ) then
+	'	currentFlag = false 'Stop overcurrent protection
+	'end if
+	
+	'if(currentFlag) then
+	'	setconfig(_ALIM, 1, LIMIT_CURRENT)
+	'	setconfig(_ALIM, 2, LIMIT_CURRENT) 'Set current limit
+	'else 
+	'	setconfig(_ALIM, 1, 200)
+	'	setconfig(_ALIM, 2, 200)
+	'end if
+	
+	if (abs(loop1) > MAX_LOOP_ERR or abs(loop2) > MAX_LOOP_ERR or loopErrTimer) and initialCheckFlag then
+		goto loopErrorHandler
+	end if
+	'Look for change in encoders' values 
+	if ((abs(command1) > DSC_ENC_THRESHOLD or abs(command2) > DSC_ENC_THRESHOLD) or dscEncTimer) and initialCheckFlag then 
+		goto encDscHandler
+	end if
+	end while
+
+'currentHandler:
+'	if GetTimerState(3) > 0 and not currentTimer and not currentFlag then 'Start timer 
+'		SetTimerCount(3, OVER_TIME)
+'		currentTimer = true
+'		lastCurrTimVal = OVER_TIME
+'		currentCounter = 0
+'		print("LIM")
+'	end if
+'	if(GetTimerCount(3) < lastCurrTimVal) then
+'		lastCurrTimVal = GetTimerCount(3)
+'		if(totalCurrent >= TRIGGER_CURRENT) then 'Count how many times current exceeded trigger value
+'			currentCounter++
+'		end if
+'	end if
+'	if GetTimerState(3) > 0 and currentTimer then
+'		if(currentCounter > 1900) then 'Set current limit flag
+'			currentFlag = true
+'			currentTimer = false
+'			SetTimerCount(3, 5000)
+'		else 
+'			currentCounter = 0
+'			currentTimer = false
+'		end if
+'	end if
+'	goto mainLoop
+	
+encDscHandler:
+	if GetTimerState(2) > 0 and not encDscTimer and not encDscFlag and not currentFlag then 'Start timer
+		SetTimerCount(2, 200)
+		encDscTimer = true 	
+		lastTimerValue = 200
+		encDscCounter = 0
+	end if
+	if(GetTimerCount(2) < lastTimerValue) then
+		lastTimerValue = GetTimerCount(2)
+		if (enc1 = enc1PrevValue) and (abs(command1) > DSC_ENC_THRESHOLD) then 'Count how many times 
+			encCnt1++
+		end if
+		
+		if (enc2 = enc2PrevValue) and (abs(command2) > DSC_ENC_THRESHOLD) then 
+			encCnt2++
+		end if
+		enc1PrevValue = enc1
+		enc2PrevValue = enc2
+	end if
+	if encDscTimer and GetTimerState(2) > 0 then
+		if (encCnt1 > 100) or (encCnt2 > 100)then 'Set encoder error flag
+			encDscFlag = true
+			encDscTimer = false
+			if(encCnt1>encCnt2) then
+				print("Enc1")
+			else
+				print("Enc2")
+			end if
+			print(" Error\n\r")
+			setconfig(_DOL, 4, 0) 'set FAULT pin
+		else
+			encDscTimer = false
+			lastTimerValue = 0
+			encCnt1 = 0
+			encCnt2 = 0		
+		end if
+	end if
+	goto mainLoop
+	
+loopErrorHandler:
+	if GetTimerState(1) > 0 and not loopErrTimer and not loopErrFlag and not currentFlag then 'Start timer
+		SetTimerCount(1, 500)
+		loopErrTimer = true
+	end if
+	if loopErrTimer and GetTimerState(1) > 0 then
+		if(abs(loop1) > MAX_LOOP_ERR or abs(loop2) > MAX_LOOP_ERR )then 'Look if loop error occurs after 200ms
+			SetTimerState(1, 1)
+			loopErrTimer = false
+			loopErrFlag = true
+			setconfig(_DOL, 4, 0) 'set FAULT pin
+			setconfig(_MMOD, 1, 0)'Set mode to Open-Loop
+			setconfig(_MMOD, 2, 0)
+			setcommand(_S, 1, 0) 
+			setcommand(_S, 2, 0)
+			print("LoopErr\n\r")
+		else
+			loopErrTimer = false
+			SetTimerState(1, 1)
+		end if
+	end if
+	goto mainLoop

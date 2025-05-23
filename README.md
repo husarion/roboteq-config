@@ -4,15 +4,21 @@ The Roboteq controller configuration files for robots with ROS 2 driver. For pro
 
 Correct configurations:
 
-|                              |          ROS 1 driver          |          ROS 2 driver           |
-| ---------------------------: | :----------------------------: | :-----------------------------: |
-| **Branch with cofiguration** |              ros1              |              ros2               |
-|         **Firmware version** |          v201-111419           |           [v21a-051923](https://www.roboteq.com/docman-list/motor-controllers-documents-and-files/nxtgen-downloads-1/firmware/1112-sbl2xxx-firmware-update-v21a-051923/file)           |
-|      **Config file version** |     v2.1-SBL2360T-20230328     | v2.1-SBL2360T-03012024-sin-rpdo |
-|      **Script file version** | production_script_02122022.mbs | production_script_03012024.mbs  |
+## Panther v0.1-v1.23
+| ROS Version |                                                                              Firmware                                                                              | Config </br> Front Driver | Config </br> Rear Driver | Script |
+| ----------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------: | :--------------: | :----: |
+| ROS2        | [v21a-051923](https://www.roboteq.com/docman-list/motor-controllers-documents-and-files/nxtgen-downloads-1/firmware/1112-sbl2xxx-firmware-update-v21a-051923/file) |[v2.1-SBL2360T-20240103-Pth-sin-rpdo-front.cpr](configuration/v2.1-SBL2360T-20240103-sin-rpdo-front.cpr)|[v2.1-SBL2360T-20240103-Pth-sin-rpdo-rear.cpr](configuration/v2.1-SBL2360T-20240103-sin-rpdo-rear.cpr)|[production_script_20240819.hex](script/production_script_20240819.hex)|
+| ROS1        |v201-111419	|[v2.1-SBL2360T-20230328-Pth-front.cpr](./configuration/v2.1-SBL2360T-20230328-Pth-front.cpr)|[v2.1-SBL2360T-20230328-Pth-rear.cpr](./configuration/v2.1-SBL2360T-20230328-Pth-rear.cpr)|[production_script_20221202.hex](./script/production_script_20221202.hex)|
+## Lynx v1.0
+| ROS Version |                                                                              Firmware                                                                              | Config | Script |
+| ----------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------: | :----: |
+| ROS2        |[v30b-022825](https://www.roboteq.com/docman-list/motor-controllers-documents-and-files/nxtgen-downloads-1/firmware/bldc-drives/robog4-1/1141-sblg2xxxs-firmware-v3-0/file)|[v3.0-SBLG2360T-20250409-Lynx.cpr](configuration/v3.0-SBLG2360T-20250409-Lynx.cpr)|[v3.0-SBLG2360T-20250409-Lynx.cpr](./configuration/v3.0-SBLG2360T-20250409-Lynx.cpr)|[production_script_20240819.hex](script/production_script_20240819.hex)|
+## Lynx v0.2
+| ROS Version |                                                                              Firmware                                                                              | Config | Script |
+| ----------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------: | :----: |
+| ROS2        | [v21a-051923](https://www.roboteq.com/docman-list/motor-controllers-documents-and-files/nxtgen-downloads-1/firmware/1112-sbl2xxx-firmware-update-v21a-051923/file) |[v2.1-SBL2360T-20240103-Pth-sin-rpdo-front.cpr](configuration/v2.1-SBL2360T-20240103-sin-rpdo-front.cpr)|[production_script_20240819.hex](script/production_script_20240819.hex)|
 
-> [!NOTE]
-> Currently, this repository contains several tags and releases, such as `Pth v1.20 - ROS 1` and `Pth v0.1-1.06 - ROS 1`, which serve as backups for deprecated configuration versions that were used previously. The latest and most current configurations and scripts are maintained on the `ros1` and `ros2` branches and are compatible with all versions of the robot.
+
 
 ## Understanding the Panther CAN Network with Raspberry Pi and Roboteq Drivers
 
@@ -24,7 +30,7 @@ The PDO in this firmware version is mainly configured through scripts due to the
 
 ![img](./.docs/roboteq-script-for-201.png)
 
-**`PDO` Configuration for Firmware Version `v2.1a` (Utilized with ROS 2)**
+**`PDO` Configuration for Firmware Version `v2.1a` and `v3.0b` (Utilized with ROS 2)**
 
 The TPDO setup for Roboteq firmware versions newer than 2.1a is predominantly handled through the configuration thanks to an update in functionality.
 
@@ -95,7 +101,7 @@ RoboRun+ is a Windows application for configurate Panther's motors. The program 
 3. Launch RoboRun+ software.
 4. Click `Yes` to read the controller configuration.
 5. In the `Configuration` tab, click `Load Profile from Disk`.
-6. Choose a configuration file that matches the driver connected to the PC (either front or rear). For example, [this one for the front driver](./configuration/v2.1-SBL2360T-03012024-sin-rpdo-front.cpr).
+6. Choose a configuration file that matches the driver connected to the PC (either front or rear). For example, [this one for the front driver](./configuration/v2.1-SBL2360T-20240103-Pth-sin-rpdo-front.cpr).
 7. A warning popup might appear. Click `Yes`.
 ![img](./.docs/read-controller-warn.png)
 8. In the Actions tab, click `Save to Controller`.
@@ -105,4 +111,4 @@ RoboRun+ is a Windows application for configurate Panther's motors. The program 
 2. In the Configure tab, click on the `Update Script` button.
 3. Choose the `.hex` file from the [script](./script/) folder and click `Yes` in the popup window.
 
-This `.hex` file is generated from the [.mbs](./script/production_script_03012024.mbs) file using RoboRun+. If you wish to edit this script, you can do so by navigating to the Scripting menu tab, clicking the `Open` icon, and selecting the `.mbs` file. After making your edits, you can export the modified file to `.hex` format by clicking on the `Export Hex` icon.
+This `.hex` file is generated from the [.mbs](./script/production_script_20240819.mbs) file using RoboRun+. If you wish to edit this script, you can do so by navigating to the Scripting menu tab, clicking the `Open` icon, and selecting the `.mbs` file. After making your edits, you can export the modified file to `.hex` format by clicking on the `Export Hex` icon.
