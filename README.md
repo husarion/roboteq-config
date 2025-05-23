@@ -55,7 +55,7 @@ Operating Mode Setup via SDO:
 ## Roboteq Driver Setup
 
 ### Install RoboRun+
-RoboRun+ is a Windows application for configurate Panther's motors. The program is avaible on [the website of the producent](https://www.roboteq.com/docman-list/motor-controllers-documents-and-files/nxtgen-downloads-1/pc-utility/1035-roborun-pc-utility-3-0beta/file). Remember to install the program in version **Roborun+ PC Utility v3.0**.
+RoboRun+ is a Windows application for configurate Panther's motors. The program is avaible on [the website of the producent](https://www.roboteq.com/docman-list/motor-controllers-documents-and-files/nxtgen-downloads-1/pc-utility/1190-roborunplus-v3-2/file). Remember to install the program in version **Roborun+ PC Utility v3.2**.
 
 ### Firmware Update
 
@@ -101,7 +101,7 @@ RoboRun+ is a Windows application for configurate Panther's motors. The program 
 3. Launch RoboRun+ software.
 4. Click `Yes` to read the controller configuration.
 5. In the `Configuration` tab, click `Load Profile from Disk`.
-6. Choose a configuration file that matches the driver connected to the PC (either front or rear). For example, [this one for the front driver](./configuration/v2.1-SBL2360T-20240103-Pth-sin-rpdo-front.cpr).
+6. Choose a configuration file that matches the driver connected to the PC (either front or rear). For example, [this one for the front driver](./configuration/v2.1-SBL2360T-20240103-Pth-front.cpr).
 7. A warning popup might appear. Click `Yes`.
 ![img](./.docs/read-controller-warn.png)
 8. In the Actions tab, click `Save to Controller`.
