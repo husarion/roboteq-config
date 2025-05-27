@@ -16,7 +16,7 @@ Correct configurations:
 ## Lynx v0.2
 | ROS Version |                                                                              Firmware                                                                              | Config | Script |
 | ----------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------: | :----: |
-| ROS2        | [v21a-051923](https://www.roboteq.com/docman-list/motor-controllers-documents-and-files/nxtgen-downloads-1/firmware/1112-sbl2xxx-firmware-update-v21a-051923/file) |[v2.1-SBL2360T-20240103-Pth-sin-rpdo-front.cpr](./configuration/v2.1-SBL2360T-20240103-sin-rpdo-front.cpr)|[production_script_20240819.hex](./script/production_script_20240819.hex)|
+| ROS2        | [v21a-051923](https://www.roboteq.com/docman-list/motor-controllers-documents-and-files/nxtgen-downloads-1/firmware/1112-sbl2xxx-firmware-update-v21a-051923/file) |[v2.1-SBL2360T-20240103-Lnx.cpr](./configuration/v2.1-SBL2360T-20240103-Lnx.cpr)|[production_script_20240819.hex](./script/production_script_20240819.hex)|
 
 
 
