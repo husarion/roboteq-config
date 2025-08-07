@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ControllerProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.0">
-  <Firmware>Roboteq v3.0b SBLG2XXX 02/28/2025</Firmware>
+  <Firmware>v3.0:SBLG2360T</Firmware>
   <Roborun>Rev 3.2 10/12/24</Roborun>
   <ControlTree Name="RCBSBLG2XXXT">
     <Item Command="BRUN" Index="1" Node="Start-up|Scripting|Script Auto-Start">
@@ -2303,7 +2303,7 @@
     <Item Command="SWD" Index="1" Node="Motor 1|Motor Configuration|Swap Windings">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>0</Value>
+      <Value>1</Value>
     </Item>
     <Item Command="TNM" Index="1" Node="Motor 1|Motor Configuration|Torque Constant (Nm/Arms)">
       <ArgumentType>IntegerList</ArgumentType>
@@ -2318,7 +2318,7 @@
     <Item Command="LPFB" Index="1" Node="Motor 1|Motor Configuration|Speed feedback filter bandwidth (Hz)">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>50</Value>
+      <Value>15</Value>
     </Item>
     <Item Command="BLSTD" Index="1" Node="Motor 1|Motor Configuration|Stall Detection">
       <ArgumentType>IntegerList</ArgumentType>
@@ -2393,7 +2393,7 @@
     <Item Command="BFBK" Index="1" Node="Motor 1|Motor Configuration|Sinusoidal Settings|Sinusoidal Angle Sensor">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>1</Value>
+      <Value>2</Value>
     </Item>
     <Item Command="BADJ" Index="1" Node="Motor 1|Motor Configuration|Sinusoidal Settings|Angle Zero Adjust">
       <ArgumentType>IntegerList</ArgumentType>
@@ -2423,62 +2423,62 @@
     <Item Command="HSAT" Index="1" Node="Motor 1|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Negative Direction|1">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>189</Value>
+      <Value>183</Value>
     </Item>
     <Item Command="HSAT" Index="2" Node="Motor 1|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Negative Direction|2">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>366</Value>
+      <Value>356</Value>
     </Item>
     <Item Command="HSAT" Index="3" Node="Motor 1|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Negative Direction|3">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>269</Value>
+      <Value>267</Value>
     </Item>
     <Item Command="HSAT" Index="4" Node="Motor 1|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Negative Direction|4">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>15</Value>
+      <Value>9</Value>
     </Item>
     <Item Command="HSAT" Index="5" Node="Motor 1|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Negative Direction|5">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>112</Value>
+      <Value>101</Value>
     </Item>
     <Item Command="HSAT" Index="6" Node="Motor 1|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Negative Direction|6">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>444</Value>
+      <Value>442</Value>
     </Item>
     <Item Command="HSAT" Index="7" Node="Motor 1|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Positive Direction|1">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>151</Value>
+      <Value>149</Value>
     </Item>
     <Item Command="HSAT" Index="8" Node="Motor 1|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Positive Direction|2">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>309</Value>
+      <Value>318</Value>
     </Item>
     <Item Command="HSAT" Index="9" Node="Motor 1|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Positive Direction|3">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>229</Value>
+      <Value>237</Value>
     </Item>
     <Item Command="HSAT" Index="10" Node="Motor 1|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Positive Direction|4">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>488</Value>
+      <Value>495</Value>
     </Item>
     <Item Command="HSAT" Index="11" Node="Motor 1|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Positive Direction|5">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>53</Value>
+      <Value>54</Value>
     </Item>
     <Item Command="HSAT" Index="12" Node="Motor 1|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Positive Direction|6">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>403</Value>
+      <Value>402</Value>
     </Item>
     <Item Command="ZSMC" Index="1" Node="Motor 1|Motor Configuration|Sinusoidal Settings|SinCos Calibration|Sin Zero Point">
       <ArgumentType>IntegerList</ArgumentType>
@@ -2603,7 +2603,7 @@
     <Item Command="EDEC" Index="1" Node="Motor 1|Motor Output|Speed &amp;amp; Acceleration|Fault Deceleration (RPM/s)">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>10</Multiplier>
-      <Value>36000</Value>
+      <Value>200000</Value>
     </Item>
     <Item Command="BPR" Index="1" Node="Motor 1|Motor Output|Speed &amp;amp; Acceleration|Bypass Trajectory/Ramp">
       <ArgumentType>IntegerList</ArgumentType>
@@ -2668,12 +2668,12 @@
     <Item Command="KPG" Index="1" Node="Motor 1|Motor Output|Closed Loop Parameters|Closed Loop Speed|Speed Proportional Gain">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1000000</Multiplier>
-      <Value>30000</Value>
+      <Value>150000</Value>
     </Item>
     <Item Command="KIG" Index="1" Node="Motor 1|Motor Output|Closed Loop Parameters|Closed Loop Speed|Speed Integral Gain">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1000000</Multiplier>
-      <Value>80000</Value>
+      <Value>120000</Value>
     </Item>
     <Item Command="KDG" Index="1" Node="Motor 1|Motor Output|Closed Loop Parameters|Closed Loop Speed|Speed Differential Gain">
       <ArgumentType>IntegerList</ArgumentType>
@@ -2733,7 +2733,7 @@
     <Item Command="SWD" Index="2" Node="Motor 2|Motor Configuration|Swap Windings">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>0</Value>
+      <Value>1</Value>
     </Item>
     <Item Command="TNM" Index="2" Node="Motor 2|Motor Configuration|Torque Constant (Nm/Arms)">
       <ArgumentType>IntegerList</ArgumentType>
@@ -2748,7 +2748,7 @@
     <Item Command="LPFB" Index="2" Node="Motor 2|Motor Configuration|Speed feedback filter bandwidth (Hz)">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>50</Value>
+      <Value>15</Value>
     </Item>
     <Item Command="BLSTD" Index="2" Node="Motor 2|Motor Configuration|Stall Detection">
       <ArgumentType>IntegerList</ArgumentType>
@@ -2823,7 +2823,7 @@
     <Item Command="BFBK" Index="2" Node="Motor 2|Motor Configuration|Sinusoidal Settings|Sinusoidal Angle Sensor">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>1</Value>
+      <Value>2</Value>
     </Item>
     <Item Command="BADJ" Index="2" Node="Motor 2|Motor Configuration|Sinusoidal Settings|Angle Zero Adjust">
       <ArgumentType>IntegerList</ArgumentType>
@@ -2853,62 +2853,62 @@
     <Item Command="HSAT" Index="13" Node="Motor 2|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Negative Direction|1">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>187</Value>
+      <Value>183</Value>
     </Item>
     <Item Command="HSAT" Index="14" Node="Motor 2|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Negative Direction|2">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>361</Value>
+      <Value>359</Value>
     </Item>
     <Item Command="HSAT" Index="15" Node="Motor 2|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Negative Direction|3">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>266</Value>
+      <Value>272</Value>
     </Item>
     <Item Command="HSAT" Index="16" Node="Motor 2|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Negative Direction|4">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>13</Value>
+      <Value>8</Value>
     </Item>
     <Item Command="HSAT" Index="17" Node="Motor 2|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Negative Direction|5">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>99</Value>
+      <Value>108</Value>
     </Item>
     <Item Command="HSAT" Index="18" Node="Motor 2|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Negative Direction|6">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>437</Value>
+      <Value>449</Value>
     </Item>
     <Item Command="HSAT" Index="19" Node="Motor 2|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Positive Direction|1">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>145</Value>
+      <Value>152</Value>
     </Item>
     <Item Command="HSAT" Index="20" Node="Motor 2|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Positive Direction|2">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>313</Value>
+      <Value>315</Value>
     </Item>
     <Item Command="HSAT" Index="21" Node="Motor 2|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Positive Direction|3">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>234</Value>
+      <Value>224</Value>
     </Item>
     <Item Command="HSAT" Index="22" Node="Motor 2|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Positive Direction|4">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>486</Value>
+      <Value>494</Value>
     </Item>
     <Item Command="HSAT" Index="23" Node="Motor 2|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Positive Direction|5">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>63</Value>
+      <Value>48</Value>
     </Item>
     <Item Command="HSAT" Index="24" Node="Motor 2|Motor Configuration|Sinusoidal Settings|Hall Sensor Angle Table|Positive Direction|6">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1</Multiplier>
-      <Value>408</Value>
+      <Value>400</Value>
     </Item>
     <Item Command="ZSMC" Index="4" Node="Motor 2|Motor Configuration|Sinusoidal Settings|SinCos Calibration|Sin Zero Point">
       <ArgumentType>IntegerList</ArgumentType>
@@ -3033,7 +3033,7 @@
     <Item Command="EDEC" Index="2" Node="Motor 2|Motor Output|Speed &amp;amp; Acceleration|Fault Deceleration (RPM/s)">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>10</Multiplier>
-      <Value>36000</Value>
+      <Value>200000</Value>
     </Item>
     <Item Command="BPR" Index="2" Node="Motor 2|Motor Output|Speed &amp;amp; Acceleration|Bypass Trajectory/Ramp">
       <ArgumentType>IntegerList</ArgumentType>
@@ -3098,12 +3098,12 @@
     <Item Command="KPG" Index="2" Node="Motor 2|Motor Output|Closed Loop Parameters|Closed Loop Speed|Speed Proportional Gain">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1000000</Multiplier>
-      <Value>30000</Value>
+      <Value>150000</Value>
     </Item>
     <Item Command="KIG" Index="2" Node="Motor 2|Motor Output|Closed Loop Parameters|Closed Loop Speed|Speed Integral Gain">
       <ArgumentType>IntegerList</ArgumentType>
       <Multiplier>1000000</Multiplier>
-      <Value>80000</Value>
+      <Value>120000</Value>
     </Item>
     <Item Command="KDG" Index="2" Node="Motor 2|Motor Output|Closed Loop Parameters|Closed Loop Speed|Speed Differential Gain">
       <ArgumentType>IntegerList</ArgumentType>
