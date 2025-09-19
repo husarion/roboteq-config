@@ -6,7 +6,7 @@ Correct configurations:
 ## Panther v1.3
 | ROS Version |                                                                              Firmware                                                                              | Config </br> Front Driver | Config </br> Rear Driver | Script |
 | ----------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------: | :--------------: | :----: |
-| ROS2        | [v30b-022825](https://www.roboteq.com/docman-list/motor-controllers-documents-and-files/nxtgen-downloads-1/firmware/bldc-drives/robog4-1/1141-sblg2xxxs-firmware-v3-0/file) |[v3.0-SBLG2360T-20250807-Pth-front.cpr](./configuration/v3.0-SBLG2360T-20250807-Pth-front.cpr)|[v3.0-SBLG2360T-20250807-Pth-rear.cpr](./configuration/v3.0-SBLG2360T-20250807-Pth-rear.cpr)|[script_20240819.hex](./script/script_20240819.hex)|
+| ROS2        | [v30b-022825](https://www.roboteq.com/docman-list/motor-controllers-documents-and-files/nxtgen-downloads-1/firmware/bldc-drives/robog4-1/1140-sblg2xxx-firmware-v3-0/file) |[v3.0-SBLG2360T-20250807-Pth-front.cpr](./configuration/v3.0-SBLG2360T-20250807-Pth-front.cpr)|[v3.0-SBLG2360T-20250807-Pth-rear.cpr](./configuration/v3.0-SBLG2360T-20250807-Pth-rear.cpr)|[script_20240819.hex](./script/script_20240819.hex)|
 ## Panther v0.1-v1.23
 | ROS Version |                                                                              Firmware                                                                              | Config </br> Front Driver | Config </br> Rear Driver | Script |
 | ----------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------: | :--------------: | :----: |
@@ -14,7 +14,7 @@ Correct configurations:
 ## Lynx v1.0
 | ROS Version |                                                                              Firmware                                                                              | Config | Script |
 | ----------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------: | :----: |
-| ROS2        |[v30b-022825](https://www.roboteq.com/docman-list/motor-controllers-documents-and-files/nxtgen-downloads-1/firmware/bldc-drives/robog4-1/1141-sblg2xxxs-firmware-v3-0/file)|[v3.0-SBLG2360T-20250806-Lynx.cpr](./configuration/v3.0-SBLG2360T-20250806-Lynx.cpr) | [script_20240819.hex](./script/script_20240819.hex)|
+| ROS2        |[v30b-022825](https://www.roboteq.com/docman-list/motor-controllers-documents-and-files/nxtgen-downloads-1/firmware/bldc-drives/robog4-1/1140-sblg2xxx-firmware-v3-0/file)|[v3.0-SBLG2360T-20250806-Lynx.cpr](./configuration/v3.0-SBLG2360T-20250806-Lynx.cpr) | [script_20240819.hex](./script/script_20240819.hex)|
 ## Lynx v0.2
 | ROS Version |                                                                              Firmware                                                                              | Config | Script |
 | ----------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------: | :----: |
