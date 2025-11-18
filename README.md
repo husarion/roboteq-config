@@ -94,6 +94,7 @@ RoboRun+ is a Windows application for configuration of Panther's and Lynx's moto
 3. Connect the controller to a Windows computer using a miniUSB connector.
 4. Launch RoboRun+ software.
 5. Click `Yes` to read the controller configuration.
+
    ![img](./.docs/read-controller-req.png)
 
 **Firmware Update Process**
@@ -129,8 +130,9 @@ RoboRun+ is a Windows application for configuration of Panther's and Lynx's moto
 5. In the `Configuration` tab, click `Load Profile from Disk`.
 6. Choose a configuration file that matches the driver connected to the PC (either front or rear). For correct one look in the table at the beginning of the [README.md](README.md).
 7. A warning popup might appear. Click `Yes`.
+
    ![img](./.docs/read-controller-warn.png)
-8. In the Actions tab, click `Save to Controller`.
+9. In the Actions tab, click `Save to Controller`.
 
 ### Roboteq Script Update
 
