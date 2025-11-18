@@ -132,7 +132,7 @@ RoboRun+ is a Windows application for configuration of Panther's and Lynx's moto
 7. A warning popup might appear. Click `Yes`.
 
    ![img](./.docs/read-controller-warn.png)
-9. In the Actions tab, click `Save to Controller`.
+8. In the Actions tab, click `Save to Controller`.
 
 ### Roboteq Script Update
 
