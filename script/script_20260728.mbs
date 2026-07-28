@@ -8,24 +8,20 @@
 ' The 0x5EED prefix is the arming magic: the driver stack never writes VAR13-16,
 ' and a bare value write cannot match the prefix, so stray writes are inert.
 ' VARs 7/8/9/10 stay exactly as in script_20240819 (driver contract).
-' NOTE for the compile (Roborun+ >= 3.2, Export Hex): setconfig/getconfig are
-' called with a VARIABLE config id here. If the compiler rejects that, the
-' fallback is a select-case table over the ids used by the unified .cpr -
-' flag it on SPEC-ROBOTEQ-CAN par.8 before reworking.
+' v2.1 (2026-07-28): audit fixes on top of the agent (ROBOTEQ-CONFIG-AUDIT):
+'   B1 dead overcurrent feature removed (currentFlag was never set; VAR7 bit
+'      0x04 stays reserved-0), B2 encDscTimer typo + window counter resets,
+'   B3 DOUT4 fault pin now edge-triggered (was a 1 kHz setconfig), unused
+'      per-loop reads dropped. The .hex alongside is compiled from this
+'      source; variable config id in setconfig/getconfig compiles fine.
 
 #define MAX_LOOP_ERR 400
 #define DSC_ENC_THRESHOLD 20
-#define TRIGGER_CURRENT 120
-#define OVER_TIME 2000
-#define LIMIT_TIME 5000
-#define LIMIT_CURRENT 80
 
 dim loopErrTimer as boolean
 dim loopErrFlag as boolean
 dim encDscTimer as boolean
 dim encDscFlag as boolean
-dim currentTimer as boolean
-dim currentFlag as boolean
 dim initialCheckFlag as boolean
 dim initCheckTimer as boolean
 
@@ -33,9 +29,6 @@ dim enc1PrevValue as integer
 dim enc2PrevValue as integer
 
 dim lastTimerValue as integer
-dim lastCurrTimVal as integer
-dim currentCounter as integer
-dim totalCurrent as integer
 dim prevOpMode as integer
 
 dim agentReq as integer
@@ -60,6 +53,7 @@ opMode = 1
 prevOpMode = opMode
 setcommand(_VAR, 10, opMode)
 setcommand(_VAR, 16, 0)
+faultPrev = 0
 
 mainLoop:
 	while true
@@ -67,10 +61,6 @@ mainLoop:
 	wait(1)
 	enc1 = getvalue(_C, 1)
 	enc2 = getvalue(_C, 2)
-	speed1 = getvalue(_S, 1)
-	speed2 = getvalue(_S, 2)
-	curr1 = getvalue(_A, 1)
-	curr2 = getvalue(_A, 2)
 	
 	opMode = getValue(_VAR, 10)
 	if opMode <> prevOpMode then
@@ -84,15 +74,22 @@ mainLoop:
 		goto agentHandler
 	end if
 	
-	flags = (((loopErrFlag and 0x01) or ((encDscFlag and 0x02)) or (currentFlag and 0x04)))
+	flags = ((loopErrFlag and 0x01) or (encDscFlag and 0x02))
 	setcommand(_VAR, 7, (getvalue(_FF, 1) or  (getValue(_FM, 1) << 8) or (getValue(_FM, 2) << 16) or (flags << 24))) 'Setting fault codes as user variable
 	'setcommand(_VAR, 8, (getvalue(_T, 2) or (getValue(_T, 3) << 8) or (getValue(_V, 2) << 16)))
 	'setcommand(_VAR, 9, (getValue(_BA, 1) or (getValue(_BA, 2) << 16)))
 	
+	faultNow = 0
 	if getValue(_FF, 1 ) > 0 or flags > 0 then
-		setconfig(_DOL, 4, 0) 'set output level of DOUT4
-	else
-		setConfig(_DOL, 4, 1)
+		faultNow = 1
+	end if
+	if faultNow <> faultPrev then
+		if faultNow = 1 then
+			setconfig(_DOL, 4, 0) 'set output level of DOUT4
+		else
+			setConfig(_DOL, 4, 1)
+		end if
+		faultPrev = faultNow
 	end if
 	
 	loop1 = getvalue(_E, 1)
@@ -100,8 +97,6 @@ mainLoop:
 	
 	command1 = getvalue(_M, 1)
 	command2 = getvalue(_M, 2)
-	
-	totalCurrent = abs(curr1) + abs(curr2) 
 	
 	if(abs(command1) > DSC_ENC_THRESHOLD or abs(command2) > DSC_ENC_THRESHOLD) and initialCheckFlag and not initCheckTimer then
 		SetTimerCount(4, 1000)
@@ -115,7 +110,7 @@ mainLoop:
 		goto loopErrorHandler
 	end if
 	'Look for change in encoders' values 
-	if ((abs(command1) > DSC_ENC_THRESHOLD or abs(command2) > DSC_ENC_THRESHOLD) or dscEncTimer) and initialCheckFlag then 
+	if ((abs(command1) > DSC_ENC_THRESHOLD or abs(command2) > DSC_ENC_THRESHOLD) or encDscTimer) and initialCheckFlag then 
 		goto encDscHandler
 	end if
 	end while
@@ -149,11 +144,12 @@ agentHandler:
 	goto mainLoop
 
 encDscHandler:
-	if GetTimerState(2) > 0 and not encDscTimer and not encDscFlag and not currentFlag then 'Start timer
+	if GetTimerState(2) > 0 and not encDscTimer and not encDscFlag then 'Start timer
 		SetTimerCount(2, 200)
 		encDscTimer = true 	
 		lastTimerValue = 200
-		encDscCounter = 0
+		encCnt1 = 0
+		encCnt2 = 0
 	end if
 	if(GetTimerCount(2) < lastTimerValue) then
 		lastTimerValue = GetTimerCount(2)
@@ -188,7 +184,7 @@ encDscHandler:
 	goto mainLoop
 	
 loopErrorHandler:
-	if GetTimerState(1) > 0 and not loopErrTimer and not loopErrFlag and not currentFlag then 'Start timer
+	if GetTimerState(1) > 0 and not loopErrTimer and not loopErrFlag then 'Start timer
 		SetTimerCount(1, 500)
 		loopErrTimer = true
 	end if
