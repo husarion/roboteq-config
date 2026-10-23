@@ -1,0 +1,235 @@
+' Husarion UGV OS RoboteQ script v2.2 (2026-10-23), for Husarion UGV OS.
+' Runs on the RoboteQ SBLG2360T of a Lynx (CANopen node 1) and on both of a
+' Panther (front node 1, rear node 2). Backward compatible with the drivers
+' of older Panther OS images (panther_ros 2.0.2-2.1.2) and with
+' husarion_ugv_ros: VAR7 (fault flags), VAR10 (op-mode mailbox) and the
+' Cmd_BRUN restart behave exactly as in script_20240819 (audit 2026-10-23,
+' meta-os-flasher docs/ROBOTEQ-SCRIPT-AUDIT-20261023.md).
+'
+' CAN config agent (SPEC-ROBOTEQ-CAN, meta-os-flasher/docs): a CANopen master
+' (roboteqctl can ...) applies/reads configuration through the user-var
+' mailbox:
+'   VAR13 = MicroBasic configuration id, VAR14 = channel (0 = non-indexed),
+'   VAR15 = value in (SET) / value out (GET),
+'   VAR16 = handshake: request  0x5EED0000 or op   (1=SETCONFIG, 2=GETCONFIG)
+'                      response 0x0DD00000 or status
+'                        (0=OK, 1=bad op, 2=id or channel out of range,
+'                         3=refused: a motor is commanded)
+' The driver stack never writes VAR13-16, and a bare value write cannot fall
+' in the request range, so stray writes are inert.
+'
+' v2.1 (2026-07-28): the agent, B1 dead overcurrent feature removed (VAR7 bit
+'   0x04 stays reserved-0), B2 encDscTimer typo + window counter resets,
+'   B3 DOUT4 no longer written at 1 kHz.
+' v2.2 (2026-10-23), from the audit and the bench on lynx-165f:
+'   - DOUT4 is owned by the script: each tick it is rewritten when it differs
+'     from the fault state. v2.1 only wrote it on a fault edge, so a profile
+'     write (every v3.0 .cpr has DOL[4]=0, the fault level) left it at the
+'     fault level until the next script restart.
+'   - The agent refuses ids above 315 and channels above 64 (status 2): on the
+'     bench a getconfig of id 316 halted the script, freezing VAR7.
+'   - The agent refuses a SET while either motor is commanded (status 3).
+'   - MMOD is asserted at start-up, so a restart after a loop-error trip (which
+'     drops MMOD to open loop in RAM) is closed-loop again.
+'   - The request match is an exact range instead of a mask.
+
+#define MAX_LOOP_ERR 400
+#define DSC_ENC_THRESHOLD 20
+#define MAX_CFG_ID 315
+#define MAX_CFG_CH 64
+
+dim loopErrTimer as boolean
+dim loopErrFlag as boolean
+dim encDscTimer as boolean
+dim encDscFlag as boolean
+dim initialCheckFlag as boolean
+dim initCheckTimer as boolean
+
+dim enc1PrevValue as integer
+dim enc2PrevValue as integer
+
+dim lastTimerValue as integer
+dim prevOpMode as integer
+
+dim agentReq as integer
+dim agentOp as integer
+dim agentId as integer
+dim agentCh as integer
+dim agentSt as integer
+dim dolWant as integer
+
+
+loopErrTimer = false
+loopErrFlag = false
+encDscFlag = false
+encDscTimer = false
+
+setconfig(_DOA, 4, 0) 'set DOUT4 always OFF
+setconfig(_DOL, 4, 1) 'set pin Active Level
+setconfig(_THLD, 2)
+initialCheckFlag = true
+initCheckTimer = false
+flags = 0
+opMode = 1
+prevOpMode = opMode
+setconfig(_MMOD, 1, opMode)
+setconfig(_MMOD, 2, opMode)
+setcommand(_VAR, 10, opMode)
+setcommand(_VAR, 16, 0)
+
+mainLoop:
+	while true
+	' without wait in main loop PDO won't be sent with set frequency (period will change by 8ms)
+	wait(1)
+	enc1 = getvalue(_C, 1)
+	enc2 = getvalue(_C, 2)
+	
+	opMode = getValue(_VAR, 10)
+	if opMode <> prevOpMode then
+		setconfig(_MMOD, 1, opMode)
+		setconfig(_MMOD, 2, opMode)
+		prevOpMode = opMode
+	end if
+
+	agentReq = getvalue(_VAR, 16)
+	if agentReq >= 0x5EED0000 and agentReq <= 0x5EED00FF then
+		goto agentHandler
+	end if
+	
+	flags = ((loopErrFlag and 0x01) or (encDscFlag and 0x02))
+	setcommand(_VAR, 7, (getvalue(_FF, 1) or  (getValue(_FM, 1) << 8) or (getValue(_FM, 2) << 16) or (flags << 24))) 'Setting fault codes as user variable
+	'setcommand(_VAR, 8, (getvalue(_T, 2) or (getValue(_T, 3) << 8) or (getValue(_V, 2) << 16)))
+	'setcommand(_VAR, 9, (getValue(_BA, 1) or (getValue(_BA, 2) << 16)))
+	
+	'DOUT4 = fault pin: level 0 on a fault, 1 otherwise. Rewritten only when
+	'it differs, so nothing (a profile write included) can leave it wrong.
+	dolWant = 1
+	if getValue(_FF, 1 ) > 0 or flags > 0 then
+		dolWant = 0
+	end if
+	if getconfig(_DOL, 4) <> dolWant then
+		setconfig(_DOL, 4, dolWant)
+	end if
+	
+	loop1 = getvalue(_E, 1)
+	loop2 = getvalue(_E, 2)
+	
+	command1 = getvalue(_M, 1)
+	command2 = getvalue(_M, 2)
+	
+	if(abs(command1) > DSC_ENC_THRESHOLD or abs(command2) > DSC_ENC_THRESHOLD) and initialCheckFlag and not initCheckTimer then
+		SetTimerCount(4, 1000)
+		initCheckTimer = true
+	end if
+	if(initCheckTimer and initialCheckFlag and GetTimerCount(4) < 1) then
+		initialCheckFlag = false
+	end if
+	
+	if (abs(loop1) > MAX_LOOP_ERR or abs(loop2) > MAX_LOOP_ERR or loopErrTimer) and initialCheckFlag then
+		goto loopErrorHandler
+	end if
+	'Look for change in encoders' values 
+	if ((abs(command1) > DSC_ENC_THRESHOLD or abs(command2) > DSC_ENC_THRESHOLD) or encDscTimer) and initialCheckFlag then 
+		goto encDscHandler
+	end if
+	end while
+
+
+agentHandler:
+	'CAN config agent: op dispatched once per armed VAR16 write; the response
+	'write below replaces the request word, so a request cannot re-trigger.
+	agentOp = agentReq and 0xFF
+	agentId = getvalue(_VAR, 13)
+	agentCh = getvalue(_VAR, 14)
+	agentSt = 0
+	if agentId < 0 or agentId > MAX_CFG_ID or agentCh < 0 or agentCh > MAX_CFG_CH then
+		agentSt = 2
+		goto agentDone
+	end if
+	if agentOp = 1 and (abs(getvalue(_M, 1)) > DSC_ENC_THRESHOLD or abs(getvalue(_M, 2)) > DSC_ENC_THRESHOLD) then
+		agentSt = 3
+		goto agentDone
+	end if
+	if agentOp = 1 then
+		if agentCh = 0 then
+			setconfig(agentId, getvalue(_VAR, 15))
+		else
+			setconfig(agentId, agentCh, getvalue(_VAR, 15))
+		end if
+	else
+		if agentOp = 2 then
+			if agentCh = 0 then
+				setcommand(_VAR, 15, getconfig(agentId))
+			else
+				setcommand(_VAR, 15, getconfig(agentId, agentCh))
+			end if
+		else
+			agentSt = 1
+		end if
+	end if
+agentDone:
+	setcommand(_VAR, 16, 0x0DD00000 or agentSt)
+	goto mainLoop
+
+encDscHandler:
+	if GetTimerState(2) > 0 and not encDscTimer and not encDscFlag then 'Start timer
+		SetTimerCount(2, 200)
+		encDscTimer = true 	
+		lastTimerValue = 200
+		encCnt1 = 0
+		encCnt2 = 0
+	end if
+	if(GetTimerCount(2) < lastTimerValue) then
+		lastTimerValue = GetTimerCount(2)
+		if (enc1 = enc1PrevValue) and (abs(command1) > DSC_ENC_THRESHOLD) then 'Count how many times 
+			encCnt1++
+		end if
+		
+		if (enc2 = enc2PrevValue) and (abs(command2) > DSC_ENC_THRESHOLD) then 
+			encCnt2++
+		end if
+		enc1PrevValue = enc1
+		enc2PrevValue = enc2
+	end if
+	if encDscTimer and GetTimerState(2) > 0 then
+		if (encCnt1 > 100) or (encCnt2 > 100)then 'Set encoder error flag
+			encDscFlag = true
+			encDscTimer = false
+			if(encCnt1>encCnt2) then
+				print("Enc1")
+			else
+				print("Enc2")
+			end if
+			print(" Error\n\r")
+			setconfig(_DOL, 4, 0) 'set FAULT pin
+		else
+			encDscTimer = false
+			lastTimerValue = 0
+			encCnt1 = 0
+			encCnt2 = 0		
+		end if
+	end if
+	goto mainLoop
+	
+loopErrorHandler:
+	if GetTimerState(1) > 0 and not loopErrTimer and not loopErrFlag then 'Start timer
+		SetTimerCount(1, 500)
+		loopErrTimer = true
+	end if
+	if loopErrTimer and GetTimerState(1) > 0 then
+		if(abs(loop1) > MAX_LOOP_ERR or abs(loop2) > MAX_LOOP_ERR )then 'Look if loop error still occurs after 500ms
+			SetTimerState(1, 1)
+			loopErrTimer = false
+			loopErrFlag = true
+			setconfig(_DOL, 4, 0) 'set FAULT pin
+			setconfig(_MMOD, 1, 0)'Set mode to Open-Loop
+			setconfig(_MMOD, 2, 0)
+			setcommand(_S, 1, 0) 
+			setcommand(_S, 2, 0)
+			print("LoopErr\n\r")
+		else
+			loopErrTimer = false
+			SetTimerState(1, 1)
+		end if
+	end if
+	goto mainLoop
