@@ -11,7 +11,7 @@
 [v2.1-SBL2360T-20240103-Pth-rear.cpr]: ./configuration/v2.1-SBL2360T-20240103-Pth-rear.cpr
 [v3.0-SBLG2360T-20250806-Lynx.cpr]: ./configuration/v3.0-SBLG2360T-20250806-Lynx.cpr
 [v2.1-SBL2360T-20240103-Lnx.cpr]: ./configuration/v2.1-SBL2360T-20240103-Lnx.cpr
-[v3.0-SBLG2360T-20261023-unified.cpr]: ./configuration/v3.0-SBLG2360T-20261023-unified.cpr
+[v3.0-SBLG2360T-20261023b-unified.cpr]: ./configuration/v3.0-SBLG2360T-20261023b-unified.cpr
 
 <!-- Scripts -->
 [script_20240819.hex]: ./script/script_20240819.hex
@@ -23,15 +23,15 @@ Correct configurations:
 
 ## Husarion UGV OS: Panther v1.3 and Lynx v1.0, one configuration (v3.0 controllers)
 
-One configuration and one script for every v3.0 controller of a Panther or a Lynx; only the CAN node id differs, and HOFI's `[roboteq]` wizard writes it (`CNOD`) with the configuration. The configuration carries a reference calibration (`HSAT`), so a controller provisioned for the shelf drives before it is calibrated on its robot.
+One configuration and one script for every v3.0 controller of a Panther or a Lynx; only the CAN node id differs, and HOFI's `[roboteq]` wizard writes it (`CNOD`) with the configuration. The configuration carries a reference calibration (`HSAT`), the table measured on the bench Lynx (lynx-165f, 2026-10-23), so a controller provisioned for the shelf drives before it is calibrated on its robot.
 
 | Robot | Controller | CAN node | Firmware | Config | Script |
 | ----- | ---------- | :------: | :------: | :----: | :----: |
-| Lynx | the only one | 1 | [v30c-101525] | [v3.0-SBLG2360T-20261023-unified.cpr] | [script_20261023_husarion-ugv-os.hex] |
-| Panther | front | 1 | [v30c-101525] | [v3.0-SBLG2360T-20261023-unified.cpr] | [script_20261023_husarion-ugv-os.hex] |
-| Panther | rear | 2 | [v30c-101525] | [v3.0-SBLG2360T-20261023-unified.cpr] | [script_20261023_husarion-ugv-os.hex] |
+| Lynx | the only one | 1 | [v30c-101525] | [v3.0-SBLG2360T-20261023b-unified.cpr] | [script_20261023_husarion-ugv-os.hex] |
+| Panther | front | 1 | [v30c-101525] | [v3.0-SBLG2360T-20261023b-unified.cpr] | [script_20261023_husarion-ugv-os.hex] |
+| Panther | rear | 2 | [v30c-101525] | [v3.0-SBLG2360T-20261023b-unified.cpr] | [script_20261023_husarion-ugv-os.hex] |
 
-The script (v2.2, header of the `.mbs`) is for Husarion UGV OS and stays backward compatible with the drivers of older Panther OS images (panther_ros 2.0.2 to 2.1.2): the fault flags (VAR7), the op-mode mailbox (VAR10) and the restart on `Cmd_BRUN` behave as in `script_20240819`. It adds the CAN configuration agent HOFI provisions through. The configuration differs from the 2026-07-28 unified one only in `DOL[4]=1`, so the fault pin (DOUT4) is not at its fault level between power-on and the script's start. The ROS 1 Panther driver was not part of the compatibility audit.
+The script (v2.2, header of the `.mbs`) is for Husarion UGV OS and stays backward compatible with the drivers of older Panther OS images (panther_ros 2.0.2 to 2.1.2): the fault flags (VAR7), the op-mode mailbox (VAR10) and the restart on `Cmd_BRUN` behave as in `script_20240819`. It adds the CAN configuration agent HOFI provisions through. The configuration differs from the 2026-07-28 unified one in `DOL[4]=1` and the reference `HSAT`, so the fault pin (DOUT4) is not at its fault level between power-on and the script's start. The ROS 1 Panther driver was not part of the compatibility audit.
 
 ## Panther v1.3
 
